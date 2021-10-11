@@ -3,7 +3,7 @@
 namespace MyProgrammerVSProjects
 {
     [StructGenerators.GenerateToString()]
-    public class NuGetReference : BaseUseApp
+    public partial class NuGetReference : BaseUseApp
     {
 
     }

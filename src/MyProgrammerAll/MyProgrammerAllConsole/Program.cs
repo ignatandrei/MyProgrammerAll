@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyProgrammerAllConsole
@@ -34,14 +35,14 @@ namespace MyProgrammerAllConsole
         {
             var l = new ListOfApps();
             Console.WriteLine("found "  + l.StartFind());
-            foreach (var item in l)
+            var throttler = new SemaphoreSlim(initialCount: Environment.ProcessorCount);
+            foreach(var item in l)
             {
-                //if(item.Name.Contains("Zip"))
-                {
-                    item.FindMoreDetails();
-                    //break;
-                }
+                await throttler.WaitAsync();
+                await item.FindMoreDetails();
             }
+            //var t = l.Select(it => it.FindMoreDetails()).ToArray();
+            //await Task.WhenAll(t);            
             var parsed = l.ParsedWinGet();
             Console.WriteLine("parsed:" + parsed.Length);
             //foreach (var item in parsed)

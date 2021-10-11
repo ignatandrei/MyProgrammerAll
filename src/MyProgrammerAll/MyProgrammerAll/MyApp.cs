@@ -1,6 +1,8 @@
 ﻿using MyProgrammerBase;
 using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MyProgrammerAll
 {
@@ -18,17 +20,17 @@ namespace MyProgrammerAll
         public string ParentAppID { get; set; }
         public bool Parsed { get; set; }
         public string HomeURL { get; set; }
-        public void FindMoreDetails(){
+        public async Task FindMoreDetails(){
             Console.WriteLine("start " + Name);
-            Parsed = StartFindWinGet();
-            
+            Parsed = await StartFindWinGet();
+            Console.WriteLine($"parsed {Name} :{Parsed}");
         }
         /// <summary>
         ///Name  Id        Version Source 
         ///7-Zip 7zip.7zip 19.00   winget
         /// </summary>
         /// <returns></returns>
-        private string WingetFindId()
+        private async Task<string> WingetFindId()
         {
             var p = new Process();
             p.StartInfo.FileName = "cmd.exe";
@@ -38,7 +40,10 @@ namespace MyProgrammerAll
             p.StartInfo.CreateNoWindow = false;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
             p.Start();
-            p.WaitForExit(60_000);
+            var source = new CancellationTokenSource();
+            source.CancelAfter(TimeSpan.FromMilliseconds(60_000));
+            await p.WaitForExitAsync(source.Token);
+            p.WaitForExit(10_1000);
             var output = p.StandardOutput.ReadToEnd();
             if (string.IsNullOrWhiteSpace(output))
                 return null;
@@ -61,7 +66,7 @@ namespace MyProgrammerAll
             //Console.WriteLine(vers);
             return lines[2].Substring(id,vers-id).Trim();
         }
-        private void FindDetailsWinGet()
+        private async Task FindDetailsWinGet()
         {
             var p = new Process();
             p.StartInfo.FileName = "cmd.exe";
@@ -71,7 +76,11 @@ namespace MyProgrammerAll
             p.StartInfo.CreateNoWindow = false;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
             p.Start();
-            p.WaitForExit(60_000);
+            var source = new CancellationTokenSource();
+            source.CancelAfter(TimeSpan.FromMilliseconds(60_000));
+            await p.WaitForExitAsync(source.Token);
+            p.WaitForExit(10_1000);
+
             var output = p.StandardOutput.ReadToEnd();
             if (string.IsNullOrWhiteSpace(output))
                 return;
@@ -92,14 +101,14 @@ namespace MyProgrammerAll
             
 
         }
-        public bool StartFindWinGet()
+        public async Task< bool> StartFindWinGet()
         {
-            string full = WingetFindId();
+            string full = await WingetFindId();
             if (string.IsNullOrWhiteSpace(full)) 
                 return false;
             Console.WriteLine(full);            
             this.WinGetID = full;
-            FindDetailsWinGet();
+            await FindDetailsWinGet();
             this.Type = "winget";
             return true;
         }
