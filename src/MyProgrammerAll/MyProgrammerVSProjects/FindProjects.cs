@@ -72,7 +72,7 @@ namespace MyProgrammerVSProjects
             }
             if (!file.EndsWith(".sln"))
             {
-                Console.WriteLine("analyze just sln files");
+                Console.WriteLine($"analyze just sln files, not {file} ");
                 return null;
             }
             Console.WriteLine($"start {file}");
