@@ -33,5 +33,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: PackTool
-        path: 'src/MyProgrammerAll/MyProgrammerAllConsole/pack/'
+        path: 'src/MyProgrammerAll/MyProgrammerAllConsole/PACK/'
         retention-days: 1        
