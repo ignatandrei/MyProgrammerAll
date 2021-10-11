@@ -49,8 +49,7 @@ namespace MyProgrammerVSProjects
                 var app =Analyze(item);
                 if(app != null)
                 {
-                    ret.AddRange(app);
-                    return ret.ToArray();
+                    ret.AddRange(app);                    
                 }
                 
             }
