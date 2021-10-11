@@ -87,6 +87,12 @@ namespace MyProgrammerAll
             var lines = output.Split(Environment.NewLine);
             foreach (var line in lines)
             {
+                if (line.Contains("Version:"))
+                {
+                    Version = line.Substring(line.IndexOf(":") + 1).Trim();
+                    continue;
+
+                }
                 if (line.Contains("Homepage:"))
                 {
                     HomeURL = line.Substring(line.IndexOf(":") + 1).Trim();

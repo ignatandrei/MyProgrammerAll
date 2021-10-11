@@ -23,6 +23,7 @@ namespace MyProgrammerAllConsole
             };
             
             await Task.WhenAll(t);
+            Console.WriteLine("finish");
 
         }
         async static Task FindSLN()

@@ -19,6 +19,7 @@ namespace MyProgrammerAll
         {
             return this.Where(it => !string.IsNullOrWhiteSpace(it.WinGetID))
                 .GroupBy(it => it.WinGetID)
+                //TODO: use MaxBy from .NET 6
                 .Select(it => it.FirstOrDefault(a => a.HomeURL != null))
                 .Where(it => it != null)
                 .ToArray();

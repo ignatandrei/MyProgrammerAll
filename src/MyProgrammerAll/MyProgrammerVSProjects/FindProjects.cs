@@ -46,10 +46,17 @@ namespace MyProgrammerVSProjects
             var ret = new List<IBaseUseApp>();
             foreach (var item in filesToAnalyze)
             {
-                var app =Analyze(item);
-                if(app != null)
+                try
                 {
-                    ret.AddRange(app);                    
+                    var app = Analyze(item);
+                    if (app != null)
+                    {
+                        ret.AddRange(app);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("error " + ex.Message);
                 }
                 
             }
