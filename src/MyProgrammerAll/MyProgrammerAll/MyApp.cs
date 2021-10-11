@@ -14,7 +14,7 @@ namespace MyProgrammerAll
         public string Source { get; set; }
         public string Publisher { get; set; }
         public string Type { get; set; }
-        public MyApp ParentApp { get; set; }
+        public string ParentAppID { get; set; }
         public bool Parsed { get; set; }
         public string HomeURL { get; set; }
         public void FindMoreDetails(){
@@ -99,6 +99,7 @@ namespace MyProgrammerAll
             Console.WriteLine(full);            
             this.WinGetID = full;
             FindDetailsWinGet();
+            this.Type = "winget";
             return true;
         }
     }

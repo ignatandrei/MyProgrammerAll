@@ -39,22 +39,25 @@ namespace MyProgrammerVSProjects
             foreach(var item in obj.EnumerateArray())
             {
                 lst.Add(item.GetProperty("Key").GetString());
+
             }
             lst.Sort();
             var filesToAnalyze= lst.ToArray();
             var ret = new List<MyApp>();
-            foreach (var item in files)
+            foreach (var item in filesToAnalyze)
             {
                 var app =Analyze(item);
                 if(app != null)
                 {
-                    ret.Add(app);
+                    ret.AddRange(app);
+                    return ret.ToArray();
                 }
+                
             }
             return ret.ToArray();
         }
 
-        public MyApp Analyze(string file)
+        public MyApp[] Analyze(string file)
         {
             if (!File.Exists(file))
             {
@@ -66,27 +69,67 @@ namespace MyProgrammerVSProjects
                 Console.WriteLine("analyze just sln files");
                 return null;
             }
-            var myApp = new MyApp();
-            
+            Console.WriteLine($"start {file}");
+            var ret = new List<MyApp>();
 
+           
             var manager = new AnalyzerManager(file);
-            
+            var projsBuildLyzer = manager.Projects;
             var ws = manager.GetWorkspace();
+             
             var sol = ws.CurrentSolution;
+            
             var dep = sol.GetProjectDependencyGraph();
-            foreach(var projID in dep.GetTopologicallySortedProjects())
-            {
 
+
+            var newSln = new MyApp();
+            ret.Add(newSln);
+            newSln.Type = "vs2019";
+            newSln.ID = sol.Id.Id.ToString("D");
+            newSln.Source = file;
+            newSln.Name = Path.GetFileNameWithoutExtension(file);
+            foreach (var projID in dep.GetTopologicallySortedProjects())
+            {
+                var newProj = new MyApp();
+                ret.Add(newProj);
+                newProj.ID = projID.Id.ToString("D");
+                newProj.Type = "project";
+                
                 var proj = sol.GetProject(projID);
+                newProj.Name = Path.GetFileNameWithoutExtension(proj.FilePath);
+                newProj.Version = proj.Version.ToString();
+                newProj.Source = proj.FilePath;                
+                newProj.ParentAppID = newSln.ID;
                 var refPrj = proj.ProjectReferences.ToArray();
-                var x = refPrj.Length;
-                var m = proj.MetadataReferences.ToArray();
-                var x1 = m.Length;
+                foreach (var item in refPrj)
+                {
+                    var projRef = new MyApp();
+                    ret.Add(projRef);
+                    projRef.Type = "project";
+                    projRef.ID = item.ProjectId.Id.ToString("D");
+                    projRef.ParentAppID = newProj.ID;
+
+                }
+
+                var projBUild = projsBuildLyzer.FirstOrDefault(it => it.Key == newProj.Source).Value.ProjectFile;
+                if (projBUild.ContainsPackageReferences) {
+                    foreach (var item in projBUild.PackageReferences )
+                    {
+                                                
+                        var packRef = new MyApp();
+                        ret.Add(packRef);
+                        packRef.Type = "package";
+                        packRef.ID = item.Name;
+                        packRef.Version = item.Version;
+                        packRef.ParentAppID = newProj.ID;
+
+                    }
+                }
                 //var projPack = manager.SolutionFile.ProjectsByGuid[projID.Id.ToString("D")];
                 //var pack=projPack.
 
             }
-            return myApp;
+            return ret.ToArray();
             
 
         }
