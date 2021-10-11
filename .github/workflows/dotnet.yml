@@ -20,10 +20,18 @@ jobs:
     - name: Restore dependencies
       run: |
         cd src
+        cd MyProgrammerAll
         dotnet restore        
     - name: Build
       run: |
         cd src
+        cd MyProgrammerAll
         cd MyProgrammerAllConsole
         dotnet build --no-restore
         dotnet pack --no-build --include-source -o PACK
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: PackTool
+        path: 'src/MyProgrammerAll/MyProgrammerAllConsole/pack/'
+        retention-days: 1        
