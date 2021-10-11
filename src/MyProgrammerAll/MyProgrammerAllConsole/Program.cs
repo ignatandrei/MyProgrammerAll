@@ -37,20 +37,16 @@ namespace MyProgrammerAllConsole
             var l = new ListOfApps();
             Console.WriteLine("found "  + l.StartFind());
             var nr = Environment.ProcessorCount;
-            var throttler = new SemaphoreSlim(initialCount: nr);
+            //var throttler = new SemaphoreSlim(initialCount: nr);
             //TODO: use chunks in .NET 6
-            var nrData = (l.Count() / nr) * nr;
-            var arr = l.Take(nrData).ToArray();
-            foreach (var item in arr)
+            //var nrData = (l.Count() / nr) * nr;
+            //var arr = l.Take(nrData).ToArray();
+            foreach (var item in l)
             {
-                await throttler.WaitAsync();
+                //await throttler.WaitAsync();
                 await item.FindMoreDetails();
             }
-            var remains = l.Skip(nrData).ToArray();
-            foreach (var item in arr)
-            {
-                await item.FindMoreDetails();
-            }
+            
 
             //var t = l.Select(it => it.FindMoreDetails()).ToArray();
             //await Task.WhenAll(t);            
