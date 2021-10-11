@@ -1,6 +1,6 @@
 ﻿using Buildalyzer;
 using Buildalyzer.Workspaces;
-using MyProgrammerAll;
+using MyProgrammerBase;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +17,7 @@ namespace MyProgrammerVSProjects
         /// https://github.com/boegholm/FixVSOpenRecent/blob/master/FixVSOpenRecent/Program.cs
         /// </summary>
         /// <returns></returns>
-        public MyApp[] Projects2019()
+        public IBaseUseApp[] Projects2019()
         {
             var f= Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             f = Path.Combine(f, "Microsoft", "VisualStudio");
@@ -43,7 +43,7 @@ namespace MyProgrammerVSProjects
             }
             lst.Sort();
             var filesToAnalyze= lst.ToArray();
-            var ret = new List<MyApp>();
+            var ret = new List<IBaseUseApp>();
             foreach (var item in filesToAnalyze)
             {
                 var app =Analyze(item);
@@ -56,7 +56,7 @@ namespace MyProgrammerVSProjects
             return ret.ToArray();
         }
 
-        public MyApp[] Analyze(string file)
+        public IBaseUseApp[] Analyze(string file)
         {
             if (!File.Exists(file))
             {
@@ -69,7 +69,7 @@ namespace MyProgrammerVSProjects
                 return null;
             }
             Console.WriteLine($"start {file}");
-            var ret = new List<MyApp>();
+            var ret = new List<IBaseUseApp>();
 
            
             var manager = new AnalyzerManager(file);
@@ -81,7 +81,7 @@ namespace MyProgrammerVSProjects
             var dep = sol.GetProjectDependencyGraph();
 
 
-            var newSln = new MyApp();
+            var newSln = new ProjectReference();
             ret.Add(newSln);
             newSln.Type = "solution";
             newSln.ID = sol.Id.Id.ToString("D");
@@ -89,7 +89,7 @@ namespace MyProgrammerVSProjects
             newSln.Name = Path.GetFileNameWithoutExtension(file);
             foreach (var projID in dep.GetTopologicallySortedProjects())
             {
-                var newProj = new MyApp();
+                var newProj = new ProjectReference();
                 ret.Add(newProj);
                 newProj.ID = projID.Id.ToString("D");
                 newProj.Type = "project";
@@ -98,34 +98,27 @@ namespace MyProgrammerVSProjects
                 newProj.Name = Path.GetFileNameWithoutExtension(proj.FilePath);
                 newProj.Version = proj.Version.ToString();
                 newProj.Source = proj.FilePath;                
-                newProj.ParentAppID = newSln.ID;
+                
                 var refPrj = proj.ProjectReferences.ToArray();
-                foreach (var item in refPrj)
+                if (refPrj.Length > 0)
                 {
-                    var projRef = new MyApp();
-                    ret.Add(projRef);
-                    projRef.Type = "project";
-                    projRef.ID = item.ProjectId.Id.ToString("D");
-                    projRef.ParentAppID = newProj.ID;
-
+                    newProj.ProjectReferences = refPrj.Select(it => it.ProjectId.Id.ToString("D")).ToArray();                    
                 }
-
-                var projBUild = projsBuildLyzer.FirstOrDefault(it => it.Key == newProj.Source).Value.ProjectFile;
+                var projBUild = projsBuildLyzer.First(it => it.Key == newProj.Source).Value.ProjectFile;
                 if (projBUild.ContainsPackageReferences) {
-                    foreach (var item in projBUild.PackageReferences )
+
+                    newProj.PackageReferences= projBUild.PackageReferences.Select(item =>
                     {
-                                                
-                        var packRef = new MyApp();
-                        ret.Add(packRef);
+
+                        var packRef = new NuGetReference();
                         packRef.Type = "package";
                         packRef.ID = item.Name;
                         packRef.Version = item.Version;
-                        packRef.ParentAppID = newProj.ID;
+                        return packRef;
 
-                    }
+                    }).ToArray();
+                    ret.AddRange(newProj.PackageReferences);
                 }
-                //var projPack = manager.SolutionFile.ProjectsByGuid[projID.Id.ToString("D")];
-                //var pack=projPack.
 
             }
             return ret.ToArray();

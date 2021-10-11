@@ -6,8 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="StructRecordGenerator" Version="0.4.2" OutputItemType="Analyzer" ReferenceOutputAssembly="false"  />
+    <PackageReference Include="StructRecordGenerator" Version="0.4.2" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
    
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyProgrammerBase\MyProgrammerBase.csproj" />
   </ItemGroup>
 
 </Project>

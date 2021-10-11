@@ -1,4 +1,5 @@
 ﻿using MyProgrammerAll;
+using MyProgrammerBase;
 using MyProgrammerVSProjects;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace MyProgrammerAllConsole
             await WriteToDisk(parsed, "programs.txt");
             
         }
-        private static async Task WriteToDisk(MyApp[] apps, string file)
+        private static async Task WriteToDisk(IBaseUseApp[] apps, string file)
         {
             var json = JsonSerializer.Serialize(apps, new JsonSerializerOptions()
             {

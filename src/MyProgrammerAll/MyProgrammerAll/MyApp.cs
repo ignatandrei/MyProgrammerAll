@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MyProgrammerBase;
+using System;
 using System.Diagnostics;
 
 namespace MyProgrammerAll
 {
     [StructGenerators.GenerateToString()]
-    public partial class MyApp
+    public partial class MyApp: IBaseUseApp
     {
         public string ID { get; set; }
         public string WinGetID { get; set; }
