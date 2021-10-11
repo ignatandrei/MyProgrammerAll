@@ -83,7 +83,7 @@ namespace MyProgrammerVSProjects
 
             var newSln = new MyApp();
             ret.Add(newSln);
-            newSln.Type = "vs2019";
+            newSln.Type = "solution";
             newSln.ID = sol.Id.Id.ToString("D");
             newSln.Source = file;
             newSln.Name = Path.GetFileNameWithoutExtension(file);

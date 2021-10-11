@@ -37,7 +37,7 @@ namespace MyProgrammerAll
             p.StartInfo.CreateNoWindow = false;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
             p.Start();
-            p.WaitForExit();
+            p.WaitForExit(60_000);
             var output = p.StandardOutput.ReadToEnd();
             if (string.IsNullOrWhiteSpace(output))
                 return null;
@@ -70,7 +70,7 @@ namespace MyProgrammerAll
             p.StartInfo.CreateNoWindow = false;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
             p.Start();
-            p.WaitForExit();
+            p.WaitForExit(60_000);
             var output = p.StandardOutput.ReadToEnd();
             if (string.IsNullOrWhiteSpace(output))
                 return;
