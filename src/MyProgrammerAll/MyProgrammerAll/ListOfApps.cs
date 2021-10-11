@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32;
+using MyProgrammerBase;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MyProgrammerAll
 {
@@ -12,6 +14,14 @@ namespace MyProgrammerAll
         public IEnumerator<MyApp> GetEnumerator()
         {
             return apps.GetEnumerator();
+        }
+        public IBaseUseApp[] ParsedWinGet()
+        {
+            return this.Where(it => !string.IsNullOrWhiteSpace(it.WinGetID))
+                .GroupBy(it => it.WinGetID)
+                .Select(it => it.FirstOrDefault(a => a.HomeURL != null))
+                .Where(it => it != null)
+                .ToArray();
         }
         public int StartFind(){
             string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";

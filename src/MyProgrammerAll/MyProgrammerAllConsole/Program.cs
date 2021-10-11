@@ -17,7 +17,7 @@ namespace MyProgrammerAllConsole
         {
             var t = new Task[]
             {
-                FindPrograms(),
+                FindProgramsWinget(),
                 FindSLN()
             };
             
@@ -30,11 +30,10 @@ namespace MyProgrammerAllConsole
             var prj = p.Projects2019();            
             await WriteToDisk(prj, "projects2019.txt");
         }
-        async static Task FindPrograms()
+        async static Task FindProgramsWinget()
         {
             var l = new ListOfApps();
             Console.WriteLine("found "  + l.StartFind());
-            var t = new List<Task>();
             foreach (var item in l)
             {
                 //if(item.Name.Contains("Zip"))
@@ -43,12 +42,12 @@ namespace MyProgrammerAllConsole
                     //break;
                 }
             }
-            var parsed = l.Where(it => !string.IsNullOrWhiteSpace(it.HomeURL)).ToArray();
-            Console.WriteLine("parsed" + parsed.Length);
-            foreach (var item in parsed)
-            {
-                Console.WriteLine(item.ToString());
-            }
+            var parsed = l.ParsedWinGet();
+            Console.WriteLine("parsed:" + parsed.Length);
+            //foreach (var item in parsed)
+            //{
+            //    Console.WriteLine(item.ToString());
+            //}
 
             await WriteToDisk(parsed, "programs.txt");
             
