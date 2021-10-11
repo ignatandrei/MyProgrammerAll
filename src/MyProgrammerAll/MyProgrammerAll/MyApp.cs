@@ -103,14 +103,22 @@ namespace MyProgrammerAll
         }
         public async Task< bool> StartFindWinGet()
         {
-            string full = await WingetFindId();
-            if (string.IsNullOrWhiteSpace(full)) 
+            try
+            {
+                string full = await WingetFindId();
+                if (string.IsNullOrWhiteSpace(full))
+                    return false;
+                Console.WriteLine(full);
+                this.WinGetID = full;
+                await FindDetailsWinGet();
+                this.Type = "winget";
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("error " + ex.Message);
                 return false;
-            Console.WriteLine(full);            
-            this.WinGetID = full;
-            await FindDetailsWinGet();
-            this.Type = "winget";
-            return true;
+            }
         }
     }
 }
