@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,8 +23,8 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>2021.11.10.2357</Version>
-    <PackageVersion>2021.11.10.2357</PackageVersion>
+    <Version>2021.11.13.2235</Version>
+    <PackageVersion>2021.11.13.2235</PackageVersion>
     <Authors>Andrei Ignat</Authors>
     <Description>Export all tools</Description>
     <Title>programmerall</Title>

@@ -3,6 +3,8 @@ using MyProgrammerBase;
 using MyProgrammerVSProjects;
 using System;
 using System.Collections.Generic;
+using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -14,16 +16,27 @@ namespace MyProgrammerAllConsole
 {
     class Program
     {
-        async static Task Main(string[] args)
+        async static Task<int> Main(string[] args)
         {
-            var t = new Task[]
-            {
-                FindProgramsWinget(),
-                FindSLN()
-            };
+            var rootCommand = new RootCommand("My programmer tools");
+            var cmdExport = new Command("export", "export more features");
+            var winget = new Command("programsWinget", "programs that are also winget");
+            var vs2019sln = new Command("VS2019Sln", "VS2019 SLN");
+            cmdExport.AddCommand(winget);
+            cmdExport.AddCommand(vs2019sln);
+            rootCommand.AddCommand(cmdExport);
+            vs2019sln.Handler = CommandHandler.Create(async () => await FindSLN());
+            winget.Handler = CommandHandler.Create(async () => await FindProgramsWinget());
+
+            return await rootCommand.InvokeAsync(args);
+            //var t = new Task[]
+            //{
+            //    FindProgramsWinget(),
+            //    FindSLN()
+            //};
             
-            await Task.WhenAll(t);
-            Console.WriteLine("finish");
+            //await Task.WhenAll(t);
+            //Console.WriteLine("finish");
 
         }
         async static Task FindSLN()
