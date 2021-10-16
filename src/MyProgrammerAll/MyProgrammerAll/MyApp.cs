@@ -1,4 +1,5 @@
-﻿using MyProgrammerBase;
+﻿using AOPMethodsCommon;
+using MyProgrammerBase;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyProgrammerAll
 {
+    [AutoMethods(template = TemplateMethod.CustomTemplateFile, MethodPrefix = "auto", CustomTemplateFileName = "../AutoMethod.txt")]
     [StructGenerators.GenerateToString()]
     public partial class MyApp: IBaseUseApp
     {
@@ -20,16 +22,18 @@ namespace MyProgrammerAll
         public string ParentAppID { get; set; }
         public bool Parsed { get; set; }
         public string HomeURL { get; set; }
+        [AOPMarkerMethod]
         public async Task FindMoreDetails(){
-            Console.WriteLine("start " + Name);
+            //Console.WriteLine("start " + Name);
             Parsed = await StartFindWinGet();
-            Console.WriteLine($"parsed {Name} :{Parsed}");
+            //Console.WriteLine($"parsed {Name} :{Parsed}");
         }
         /// <summary>
         ///Name  Id        Version Source 
         ///7-Zip 7zip.7zip 19.00   winget
         /// </summary>
         /// <returns></returns>
+        [AOPMarkerMethod]
         private async Task<string> WingetFindId()
         {
             var p = new Process();
@@ -66,6 +70,7 @@ namespace MyProgrammerAll
             //Console.WriteLine(vers);
             return lines[2].Substring(id,vers-id).Trim();
         }
+        [AOPMarkerMethod]
         private async Task FindDetailsWinGet()
         {
             var p = new Process();
@@ -107,6 +112,7 @@ namespace MyProgrammerAll
             
 
         }
+        [AOPMarkerMethod]
         public async Task< bool> StartFindWinGet()
         {
             try

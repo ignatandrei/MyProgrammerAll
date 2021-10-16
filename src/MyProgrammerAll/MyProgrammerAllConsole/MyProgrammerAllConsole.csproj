@@ -15,7 +15,12 @@
     <ProjectReference Include="..\MyProgrammerVSProjects\MyProgrammerVSProjects.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="../AutoMethod.txt" />
+    <PackageReference Include="AOPMethodsCommon" Version="2021.6.11.907" />
+    <PackageReference Include="AOPMethodsGenerator" Version="2021.6.11.907" />
 
+  </ItemGroup>
   <PropertyGroup>
     <PackAsTool>true</PackAsTool>
     <PackageId>dotnet-programmerAll</PackageId>

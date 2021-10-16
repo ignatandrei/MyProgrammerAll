@@ -13,5 +13,10 @@
     <ProjectReference Include="..\MyProgrammerBase\MyProgrammerBase.csproj" />
     <PackageReference Include="StructRecordGenerator" Version="0.4.2" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="../AutoMethod.txt" />
+    <PackageReference Include="AOPMethodsCommon" Version="2021.6.11.907" />
+    <PackageReference Include="AOPMethodsGenerator" Version="2021.6.11.907" />
 
+  </ItemGroup>
 </Project>

@@ -14,4 +14,11 @@
     <ProjectReference Include="..\MyProgrammerBase\MyProgrammerBase.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="../AutoMethod.txt" />
+    <PackageReference Include="AOPMethodsCommon" Version="2021.6.11.907" />
+    <PackageReference Include="AOPMethodsGenerator" Version="2021.6.11.907" />
+
+  </ItemGroup>
+
 </Project>
