@@ -23,10 +23,11 @@ namespace MyProgrammerAll
         public bool Parsed { get; set; }
         public string HomeURL { get; set; }
         [AOPMarkerMethod]
-        public async Task FindMoreDetails(){
+        public async Task<bool> FindMoreDetails(){
             //Console.WriteLine("start " + Name);
             Parsed = await StartFindWinGet();
             //Console.WriteLine($"parsed {Name} :{Parsed}");
+            return Parsed;
         }
         /// <summary>
         ///Name  Id        Version Source 
