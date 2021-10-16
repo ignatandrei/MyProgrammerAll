@@ -113,7 +113,7 @@ namespace MyProgrammerAll
 
         }
         [AOPMarkerMethod]
-        public async Task< bool> StartFindWinGet()
+        public async Task<bool> StartFindWinGet()
         {
             try
             {
