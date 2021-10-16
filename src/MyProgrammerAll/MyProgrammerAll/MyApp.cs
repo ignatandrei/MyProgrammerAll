@@ -71,7 +71,7 @@ namespace MyProgrammerAll
             return lines[2].Substring(id,vers-id).Trim();
         }
         [AOPMarkerMethod]
-        private async Task FindDetailsWinGet()
+        private async Task<bool> FindDetailsWinGet()
         {
             var p = new Process();
             p.StartInfo.FileName = "cmd.exe";
@@ -88,7 +88,7 @@ namespace MyProgrammerAll
 
             var output = p.StandardOutput.ReadToEnd();
             if (string.IsNullOrWhiteSpace(output))
-                return;
+                return false;
             var lines = output.Split(Environment.NewLine);
             foreach (var line in lines)
             {
@@ -109,7 +109,7 @@ namespace MyProgrammerAll
                     continue;
                 }
             }
-            
+            return true;
 
         }
         [AOPMarkerMethod]
