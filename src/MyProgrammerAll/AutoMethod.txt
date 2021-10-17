@@ -16,7 +16,7 @@ namespace {{NamespaceName}} {
     [GeneratedCode("AOPMethods", "{{version}}")]
     [CompilerGenerated]
     public partial class {{ClassName}}{
-        public static ActivitySource source =  new ("MyProgrammerBase.{{ClassName}}");        
+        public static ActivitySource source =  new ("MyProgrammerBase.{{ClassName}}",ActivityKind.Internal,Activity.Current.Context);        
 
       {{~ for mi in Methods ~}}
         //{{mi.Name}}
