@@ -10,8 +10,8 @@ namespace MyProgrammerBase
     {
         public BaseUseApp()
         {
-            var s = source.StartActivity("ads");
-            s.OperationName
+            //var s = source.StartActivity("ads");
+            //s.OperationName
         }
         public static ActivitySource source =  new ("MyProgrammerBase.DistributedTracing");        
         public string ID { get; set; }

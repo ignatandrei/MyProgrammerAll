@@ -14,7 +14,7 @@ namespace MyProgrammerVSProjects
 {
     [AutoMethods(template = TemplateMethod.CustomTemplateFile, MethodPrefix = "auto", CustomTemplateFileName = "../AutoMethod.txt")]
 
-    public class FindProjects
+    public partial class FindProjects
     {
         /// <summary>
         /// https://github.com/boegholm/FixVSOpenRecent/blob/master/FixVSOpenRecent/Program.cs
