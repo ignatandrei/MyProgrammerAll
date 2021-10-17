@@ -133,16 +133,10 @@ namespace MyProgrammerVSProjects
                 var projBUild = projsBuildLyzer.First(it => it.Key == newProj.Source).Value.ProjectFile;
                 if (projBUild.ContainsPackageReferences) {
 
-                    newProj.PackageReferences= projBUild.PackageReferences.Select(item =>
-                    {
-
-                        var packRef = new NuGetReference();
-                        packRef.Type = "package";
-                        packRef.ID = item.Name;
-                        packRef.Version = item.Version;
-                        return packRef;
-
-                    }).ToArray();
+                    newProj.PackageReferences= projBUild.
+                        PackageReferences.
+                        Select(NuGetReference.FromPackageReference).
+                        ToArray();
                     ret.AddRange(newProj.PackageReferences);
                 }
 
