@@ -11,6 +11,7 @@
     <AdditionalFiles Include="../AutoMethod.txt" />
     <PackageReference Include="AOPMethodsCommon" Version="2021.6.11.907" />
     <PackageReference Include="AOPMethodsGenerator" Version="2021.6.11.907" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" />
 
   </ItemGroup>
 </Project>

@@ -1,6 +1,10 @@
-﻿using MyProgrammerAll;
+﻿using Azure.Monitor.OpenTelemetry.Exporter;
+using MyProgrammerAll;
 using MyProgrammerBase;
 using MyProgrammerVSProjects;
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
@@ -18,6 +22,23 @@ namespace MyProgrammerAllConsole
     {
         async static Task<int> Main(string[] args)
         {
+            using var tracerProvider = Sdk.CreateTracerProviderBuilder()
+               .SetResourceBuilder(ResourceBuilder.CreateDefault()
+               .AddService("MyProgrammerConsole"))
+               .AddSource("MyProgrammerBase.*")
+               .AddConsoleExporter(c=>
+               {
+                   c.Targets = OpenTelemetry.Exporter.ConsoleExporterOutputTargets.Console;
+               })
+               .AddAzureMonitorTraceExporter(o =>
+               {
+                   o.ConnectionString = "InstrumentationKey=4772445f-40dd-44ae-b7d5-2c2ea33b9de3;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/";
+                    
+               })
+               .Build();
+            var b = new BaseUseApp();
+            var c = new BaseUseApp();
+            return 1;
             var rootCommand = new RootCommand("My programmer tools");
             var cmdExport = new Command("export", "export more features");
             var winget = new Command("programsWinget", "programs that are also winget");

@@ -36,7 +36,11 @@ namespace {{NamespaceName}} {
             end
             }}
         public {{strAsync}} {{mi.ReturnType}} {{mi.NewName}} ({{mi.parametersDefinitionCSharp }}){
-			var utcTime =System.DateTime.UtcNow;
+			using (var s = MyProgrammerBase.source.StartActivity("{{ClassName}}.{{mi.NewName}}"))
+            {
+                
+            
+            var utcTime =System.DateTime.UtcNow;
              
 			Console.WriteLine("start method {{mi.NewName}} at " +utcTime);
             {{~ for miArg in mi.Parameters  ~}}
@@ -63,7 +67,7 @@ namespace {{NamespaceName}} {
 				utcTime =System.DateTime.UtcNow;
                 Console.WriteLine("end method {{mi.NewName}}");                
             }
-
+            }
 
         }//end {{mi.NewName}}
         
