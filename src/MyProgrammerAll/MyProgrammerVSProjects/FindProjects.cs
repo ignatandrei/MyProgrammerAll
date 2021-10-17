@@ -1,4 +1,5 @@
-﻿using Buildalyzer;
+﻿using AOPMethodsCommon;
+using Buildalyzer;
 using Buildalyzer.Workspaces;
 using MyProgrammerBase;
 using System;
@@ -11,12 +12,15 @@ using System.Xml.XPath;
 
 namespace MyProgrammerVSProjects
 {
+    [AutoMethods(template = TemplateMethod.CustomTemplateFile, MethodPrefix = "auto", CustomTemplateFileName = "../AutoMethod.txt")]
+
     public class FindProjects
     {
         /// <summary>
         /// https://github.com/boegholm/FixVSOpenRecent/blob/master/FixVSOpenRecent/Program.cs
         /// </summary>
         /// <returns></returns>
+        [AOPMarkerMethod]
         public IBaseUseApp[] Projects2019()
         {
             var f= Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -62,7 +66,7 @@ namespace MyProgrammerVSProjects
             }
             return ret.ToArray();
         }
-
+        [AOPMarkerMethod]
         public IBaseUseApp[] Analyze(string file)
         {
             if (!File.Exists(file))

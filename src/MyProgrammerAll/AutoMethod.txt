@@ -36,7 +36,7 @@ namespace {{NamespaceName}} {
             end
             }}
         public {{strAsync}} {{mi.ReturnType}} {{mi.NewName}} ({{mi.parametersDefinitionCSharp }}){
-			using (var s = MyProgrammerBase.BaseUseApp.source.StartActivity("{{ClassName}}.{{mi.NewName}}"))
+			using (var activity = MyProgrammerBase.BaseUseApp.source.StartActivity("{{ClassName}}.{{mi.NewName}}"))
             {
                 
             
@@ -52,7 +52,7 @@ namespace {{NamespaceName}} {
                     val{{ miArg.Key }} = "Error serializing parameter {{ miArg.Key }} : "+ ex.Message;
                 }
                 Console.WriteLine("Argument_{{ miArg.Key }} :" + val{{ miArg.Key }});
-                s.AddTag("Argument_{{ miArg.Key }}",val{{ miArg.Key }}); 
+                activity?.AddTag("Argument_{{ miArg.Key }}",val{{ miArg.Key }}); 
              
             {{ end}}
 
@@ -61,6 +61,8 @@ namespace {{NamespaceName}} {
             }
             catch(Exception ex){
                 Console.WriteLine($"--{{mi.NewName}} exception {ex.Message}");
+                activity?.SetTag("otel.status_code", "ERROR");
+                activity?.SetTag("otel.status_description", ex.Message);
                 throw;
             }
             finally{

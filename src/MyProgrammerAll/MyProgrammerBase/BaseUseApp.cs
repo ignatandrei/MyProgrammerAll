@@ -8,6 +8,11 @@ namespace MyProgrammerBase
     [AutoGenerateInterface]
     public partial class BaseUseApp: IBaseUseApp
     {
+        public BaseUseApp()
+        {
+            var s = source.StartActivity("ads");
+            s.OperationName
+        }
         public static ActivitySource source =  new ("MyProgrammerBase.DistributedTracing");        
         public string ID { get; set; }
         public string Name { get; set; }
