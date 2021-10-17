@@ -38,13 +38,15 @@ namespace {{NamespaceName}} {
             end
             }}
         public {{strAsync}} {{mi.ReturnType}} {{mi.NewName}} ({{mi.parametersDefinitionCSharp }}){
-			using (var activity = source.StartActivity("{{ClassName}}_{{mi.NewName}}",ActivityKind.Internal,Activity.Current.Context))
+			//using (var activity = source.StartActivity("{{ClassName}}_{{mi.NewName}}",ActivityKind.Internal,Activity.Current.Context))
+            using (var activity = source.StartActivity("{{ClassName}}_{{mi.NewName}}"))
             {
                 
-            
+                activity?.Start();
+                
             var utcTime =System.DateTime.UtcNow;
              
-			Console.WriteLine("start method {{mi.NewName}} at " +utcTime);
+			Console.WriteLine("start method {{mi.NewName}} at " +utcTime +" act :"+(activity != null));
             {{~ for miArg in mi.Parameters  ~}}
                 string val{{ miArg.Key }} ;
                 try{

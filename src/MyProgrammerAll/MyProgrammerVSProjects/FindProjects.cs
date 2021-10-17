@@ -67,19 +67,34 @@ namespace MyProgrammerVSProjects
             return ret.ToArray();
         }
         [AOPMarkerMethod]
+        bool VerifyIfProjectExists(string file)
+        {
+            try
+            {
+                if (!File.Exists(file))
+                {
+                    Console.WriteLine($"{file} does not exists");
+                    return false;
+                }
+                if (!file.EndsWith(".sln"))
+                {
+                    Console.WriteLine($"analyze just sln files, not {file} ");
+                    return false;
+                }
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        [AOPMarkerMethod]
         public IBaseUseApp[] Analyze(string file)
         {
-            if (!File.Exists(file))
-            {
-                Console.WriteLine($"{file} does not exists");
-                return null;
-            }
-            if (!file.EndsWith(".sln"))
-            {
-                Console.WriteLine($"analyze just sln files, not {file} ");
-                return null;
-            }
             Console.WriteLine($"start {file}");
+            if (!VerifyIfProjectExists(file))
+                return null;
+
             var ret = new List<IBaseUseApp>();
 
            
