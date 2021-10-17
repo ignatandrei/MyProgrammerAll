@@ -81,7 +81,7 @@ namespace MyProgrammerVSProjects
                     Console.WriteLine($"analyze just sln files, not {file} ");
                     return false;
                 }
-
+                return true;
             }
             catch (Exception)
             {
