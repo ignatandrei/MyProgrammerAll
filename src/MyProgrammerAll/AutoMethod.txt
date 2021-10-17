@@ -36,7 +36,7 @@ namespace {{NamespaceName}} {
             end
             }}
         public {{strAsync}} {{mi.ReturnType}} {{mi.NewName}} ({{mi.parametersDefinitionCSharp }}){
-			using (var s = MyProgrammerBase.source.StartActivity("{{ClassName}}.{{mi.NewName}}"))
+			using (var s = MyProgrammerBase.BaseUseApp.source.StartActivity("{{ClassName}}.{{mi.NewName}}"))
             {
                 
             
@@ -52,7 +52,7 @@ namespace {{NamespaceName}} {
                     val{{ miArg.Key }} = "Error serializing parameter {{ miArg.Key }} : "+ ex.Message;
                 }
                 Console.WriteLine("Argument_{{ miArg.Key }} :" + val{{ miArg.Key }});
-                
+                s.AddTag("Argument_{{ miArg.Key }}",val{{ miArg.Key }}); 
              
             {{ end}}
 

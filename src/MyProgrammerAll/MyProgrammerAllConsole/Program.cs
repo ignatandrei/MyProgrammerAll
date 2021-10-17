@@ -36,9 +36,6 @@ namespace MyProgrammerAllConsole
                     
                })
                .Build();
-            var b = new BaseUseApp();
-            var c = new BaseUseApp();
-            return 1;
             var rootCommand = new RootCommand("My programmer tools");
             var cmdExport = new Command("export", "export more features");
             var winget = new Command("programsWinget", "programs that are also winget");
