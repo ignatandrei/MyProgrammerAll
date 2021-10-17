@@ -16,6 +16,8 @@ namespace {{NamespaceName}} {
     [GeneratedCode("AOPMethods", "{{version}}")]
     [CompilerGenerated]
     public partial class {{ClassName}}{
+        public static ActivitySource source =  new ("MyProgrammerBase.{{ClassName}}");        
+
       {{~ for mi in Methods ~}}
         //{{mi.Name}}
             {{
@@ -36,7 +38,7 @@ namespace {{NamespaceName}} {
             end
             }}
         public {{strAsync}} {{mi.ReturnType}} {{mi.NewName}} ({{mi.parametersDefinitionCSharp }}){
-			using (var activity = MyProgrammerBase.BaseUseApp.source.StartActivity("{{ClassName}}.{{mi.NewName}}"))
+			using (var activity = source.StartActivity("{{ClassName}}_{{mi.NewName}}"))
             {
                 
             
