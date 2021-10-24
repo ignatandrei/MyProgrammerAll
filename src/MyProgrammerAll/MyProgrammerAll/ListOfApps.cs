@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.Win32;
 using MyProgrammerBase;
 using System;
 using System.Collections;
@@ -10,7 +11,13 @@ namespace MyProgrammerAll
 {
     public class ListOfApps : IEnumerable<MyApp>
     {
+        public ListOfApps(TelemetryClient tc)
+        {
+            this.tc = tc;
+        }
         private List<MyApp> apps = new List<MyApp>();
+        private readonly TelemetryClient tc;
+
         public IEnumerator<MyApp> GetEnumerator()
         {
             return apps.GetEnumerator();

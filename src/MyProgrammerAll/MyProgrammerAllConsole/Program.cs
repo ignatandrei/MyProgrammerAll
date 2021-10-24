@@ -25,7 +25,7 @@ namespace MyProgrammerAllConsole
 {
     class Program
     {
-        async static Task Main(string[] args)
+        async static Task MainTestTelemetry(string[] args)
         {
             //https://docs.microsoft.com/en-us/azure/azure-monitor/app/worker-service
             // Create the DI container.
@@ -52,45 +52,54 @@ namespace MyProgrammerAllConsole
             // Obtain TelemetryClient instance from DI, for additional manual tracking or to flush.
             var telemetryClient = serviceProvider.GetRequiredService<TelemetryClient>();
 
-            var httpClient = new HttpClient();
-            var i = 0;
-            while (i<2) // This app runs indefinitely. replace with actual application termination logic.
+            
+            using (var a = new Activity("AndreiDependencyTelemetry"))
             {
-                i++;
-                logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-
-                // Replace with a name which makes sense for this operation.
-                using (telemetryClient.StartOperation<RequestTelemetry>("operation"))
+                a.AddTag("E", "B");
+                using (var h = telemetryClient.StartOperation<DependencyTelemetry>(a))
                 {
-                    logger.LogWarning("A sample warning message. By default, logs with severity Warning or higher is captured by Application Insights");
-                    logger.LogInformation("Calling google.com");
-                    var res = await httpClient.GetAsync("https://google.com");
-                    logger.LogInformation("Calling google completed with status:" + res.StatusCode);
-                    telemetryClient.TrackEvent("google call event completed");
+                    await Task.Delay(2_000);
+                    using (var a1 = new Activity("AndreiRequestTelemetry"))
+                    {
+                        a1.AddTag("Q", "T");
+                        using (var h1 = telemetryClient.StartOperation<DependencyTelemetry>(a1))
+                        {
+                            await Task.Delay(2_000);
+                            var res = await new HttpClient().GetAsync("https://google.com"); // this dependency will be captured by Application Insights.
+                            logger.LogWarning("Response from google is:" + res.StatusCode); // this will be captured by Application Insights.
+                            telemetryClient.TrackEvent("sampleevent");
+                            await Task.Delay(2_000);
+                            telemetryClient.TrackException(new ArgumentException("bing"));
+                        }
+                    }
+                    await Task.Delay(2_000);
+                    telemetryClient.TrackException(new ArgumentException("asd"));
+                    await Task.Delay(2_000);
                 }
-                Console.WriteLine(i);
-                await Task.Delay(2000);
+                
             }
             telemetryClient.Flush();
             await Task.Delay(2000);
         }
 
-        async static Task<int> Main1(string[] args)
+        async static Task<int> Main(string[] args)
         {
-            using var tracerProvider = Sdk.CreateTracerProviderBuilder()
-               .SetResourceBuilder(ResourceBuilder.CreateDefault()
-               .AddService("MyProgrammerConsole"))
-               .AddSource("MyProgrammerBase.*")
-               .AddConsoleExporter(c=>
-               {
-                   c.Targets = OpenTelemetry.Exporter.ConsoleExporterOutputTargets.Console;
-               })
-               .AddAzureMonitorTraceExporter(o =>
-               {
-                   o.ConnectionString = "InstrumentationKey=4772445f-40dd-44ae-b7d5-2c2ea33b9de3;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/";
-                    
-               })
-               .Build();
+
+            IServiceCollection services = new ServiceCollection();
+
+            //services.AddLogging(loggingBuilder => loggingBuilder.AddFilter<Microsoft.Extensions.Logging.ApplicationInsights.ApplicationInsightsLoggerProvider>("Category", LogLevel.Information));
+            services.AddApplicationInsightsTelemetryWorkerService(
+                aiso =>
+                {
+                    aiso.ConnectionString = "InstrumentationKey=4772445f-40dd-44ae-b7d5-2c2ea33b9de3;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/";
+                    aiso.EnableDebugLogger = true;
+                    aiso.AddAutoCollectedMetricExtractor = true;
+                }
+                );
+
+            services.AddSingleton<FindProjects>();
+            services.AddSingleton<ListOfApps>();
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
             var rootCommand = new RootCommand("My programmer tools");
             var cmdExport = new Command("export", "export more features");
             var winget = new Command("programsWinget", "programs that are also winget");
@@ -98,8 +107,8 @@ namespace MyProgrammerAllConsole
             cmdExport.AddCommand(winget);
             cmdExport.AddCommand(vs2019sln);
             rootCommand.AddCommand(cmdExport);
-            vs2019sln.Handler = CommandHandler.Create(async () => await FindSLN());
-            winget.Handler = CommandHandler.Create(async () => await FindProgramsWinget());
+            vs2019sln.Handler = CommandHandler.Create(async () => await FindSLN(serviceProvider.GetRequiredService<FindProjects>()));
+            winget.Handler = CommandHandler.Create(async () => await FindProgramsWinget(serviceProvider.GetRequiredService<ListOfApps>()));
 
             return await rootCommand.InvokeAsync(args);
             //var t = new Task[]
@@ -112,15 +121,15 @@ namespace MyProgrammerAllConsole
             //Console.WriteLine("finish");
 
         }
-        async static Task FindSLN()
+        async static Task FindSLN(FindProjects p)
         {
-            var p = new FindProjects();
+            
             var prj = p.Projects2019();            
             await WriteToDisk(prj, "projects2019.txt");
         }
-        async static Task FindProgramsWinget()
+        async static Task FindProgramsWinget(ListOfApps l)
         {
-            var l = new ListOfApps();
+            
             Console.WriteLine("found "  + l.StartFind());
             var nr = Environment.ProcessorCount;
             //var throttler = new SemaphoreSlim(initialCount: nr);

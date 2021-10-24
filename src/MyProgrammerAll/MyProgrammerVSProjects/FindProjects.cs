@@ -1,6 +1,7 @@
 ﻿using AOPMethodsCommon;
 using Buildalyzer;
 using Buildalyzer.Workspaces;
+using Microsoft.ApplicationInsights;
 using MyProgrammerBase;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,12 @@ namespace MyProgrammerVSProjects
 
     public partial class FindProjects
     {
+        public FindProjects(TelemetryClient tc)
+        {
+            this.tc = tc;
+        }
+        private readonly TelemetryClient tc;
+
         /// <summary>
         /// https://github.com/boegholm/FixVSOpenRecent/blob/master/FixVSOpenRecent/Program.cs
         /// </summary>
