@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights;
 namespace {{NamespaceName}} {
 
     [GeneratedCode("AOPMethods", "{{version}}")]
@@ -39,10 +41,11 @@ namespace {{NamespaceName}} {
             }}
         public {{strAsync}} {{mi.ReturnType}} {{mi.NewName}} ({{mi.parametersDefinitionCSharp }}){
 			//using (var activity = source.StartActivity("{{ClassName}}_{{mi.NewName}}",ActivityKind.Internal,Activity.Current.Context))
-            using (var activity = source.StartActivity("{{ClassName}}_{{mi.NewName}}"))
+            //using (var activity = source.StartActivity("{{ClassName}}_{{mi.NewName}}"))
+            using (var activity = new Activity("{{ClassName}}_{{mi.NewName}}"))
             {
                 
-                activity?.Start();
+                //activity?.Start();
                 
             var utcTime =System.DateTime.UtcNow;
              
@@ -59,7 +62,8 @@ namespace {{NamespaceName}} {
                 activity?.AddTag("Argument_{{ miArg.Key }}",val{{ miArg.Key }}); 
              
             {{ end}}
-
+            using (var h = tc.StartOperation<DependencyTelemetry>(activity))
+{
             try{
                 {{returnString}} {{  strAwait }} {{mi.Name}}({{ mi.parametersCallCSharp }});
             }
@@ -67,14 +71,15 @@ namespace {{NamespaceName}} {
                 Console.WriteLine($"--{{mi.NewName}} exception {ex.Message}");
                 activity?.SetTag("otel.status_code", "ERROR");
                 activity?.SetTag("otel.status_description", ex.Message);
+                tc.TrackException(ex);
                 throw;
             }
             finally{
 				utcTime =System.DateTime.UtcNow;
                 Console.WriteLine("end method {{mi.NewName}}");                
             }
-            }
-
+            }//end activity
+            }//end telemetryclient
         }//end {{mi.NewName}}
         
         {{ end}}
