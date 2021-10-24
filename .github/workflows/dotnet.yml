@@ -32,7 +32,8 @@ jobs:
       run: |
         cd src
         cd MyProgrammerAll      
-        ./AutoMethod.ps1
+        dotnet tool restore
+        pwsh ./AutoMethod.ps1
         cd MyProgrammerAllConsole
         dotnet pack --include-source -o PACK
     - name: Archive production artifacts
