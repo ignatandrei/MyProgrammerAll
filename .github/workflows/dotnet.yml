@@ -27,8 +27,11 @@ jobs:
         cd src
         cd MyProgrammerAll
         cd MyProgrammerAllConsole
-        dotnet build --no-restore
-        cd ..
+        dotnet build --no-restore        
+    - name: Pack
+      run: |
+        cd src
+        cd MyProgrammerAll      
         ./AutoMethod.ps1
         cd MyProgrammerAllConsole
         dotnet pack --include-source -o PACK
