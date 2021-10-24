@@ -28,7 +28,10 @@ jobs:
         cd MyProgrammerAll
         cd MyProgrammerAllConsole
         dotnet build --no-restore
-        dotnet pack --no-build --include-source -o PACK
+        cd ..
+        ./AutoMethod.ps1
+        cd MyProgrammerAllConsole
+        dotnet pack --include-source -o PACK
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
