@@ -130,22 +130,7 @@ namespace MyProgrammerAllConsole
         async static Task FindProgramsWinget(ListOfApps l)
         {
             
-            Console.WriteLine("found "  + l.StartFind());
-            var nr = Environment.ProcessorCount;
-            //var throttler = new SemaphoreSlim(initialCount: nr);
-            //TODO: use chunks in .NET 6
-            //var nrData = (l.Count() / nr) * nr;
-            //var arr = l.Take(nrData).ToArray();
-            foreach (var item in l)
-            {
-                //await throttler.WaitAsync();
-                await item.FindMoreDetails();
-            }
-            
-
-            //var t = l.Select(it => it.FindMoreDetails()).ToArray();
-            //await Task.WhenAll(t);            
-            var parsed = l.ParsedWinGet();
+            var parsed = await l.FindProgramsWinget();
             Console.WriteLine("parsed:" + parsed.Length);
             //foreach (var item in parsed)
             //{

@@ -1,4 +1,5 @@
-﻿using Microsoft.ApplicationInsights;
+﻿using AOPMethodsCommon;
+using Microsoft.ApplicationInsights;
 using Microsoft.Win32;
 using MyProgrammerBase;
 using System;
@@ -6,10 +7,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyProgrammerAll
 {
-    public class ListOfApps : IEnumerable<MyApp>
+    [AutoMethods(template = TemplateMethod.CustomTemplateFile, MethodPrefix = "auto", CustomTemplateFileName = "../AutoMethod.txt")]
+    public partial class ListOfApps : IEnumerable<MyApp>
     {
         public ListOfApps(TelemetryClient tc)
         {
@@ -31,6 +34,18 @@ namespace MyProgrammerAll
                 .Where(it => it != null)
                 .ToArray();
         }
+        [AOPMarkerMethod]
+        public async Task<IBaseUseApp[]> FindProgramsWinget()
+        {
+            StartFind();
+            foreach (var item in this)
+            {
+                //await throttler.WaitAsync();
+                await item.FindMoreDetails();
+            }
+            return ParsedWinGet();
+        }
+        [AOPMarkerMethod]
         public int StartFind(){
             string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
             using(RegistryKey key = Registry.LocalMachine.OpenSubKey(registry_key))
