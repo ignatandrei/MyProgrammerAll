@@ -44,7 +44,7 @@ namespace MyProgrammerAll
                         {
                             continue;
                         }
-                        var app=new MyApp();
+                        var app=new MyApp(tc);
                         app.Name=name;
                         app.Version=subkey.GetValue("DisplayVersion")?.ToString();
                         app.Publisher=subkey.GetValue("Publisher")?.ToString();

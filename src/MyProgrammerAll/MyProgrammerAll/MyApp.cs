@@ -1,4 +1,5 @@
 ﻿using AOPMethodsCommon;
+using Microsoft.ApplicationInsights;
 using MyProgrammerBase;
 using System;
 using System.Diagnostics;
@@ -11,6 +12,12 @@ namespace MyProgrammerAll
     [StructGenerators.GenerateToString()]
     public partial class MyApp: IBaseUseApp
     {
+        private readonly TelemetryClient tc;
+
+        public MyApp(TelemetryClient tc )
+        {
+            this.tc = tc;
+        }
         public string ID { get; set; }
         public string WinGetID { get; set; }
         public string Name { get; set; }
